@@ -155,8 +155,8 @@ resposive
 *******************/
 @media (max-width: 600px) {
   .indexbackground li {
-    left: 5%;
-    margin: 10px;
+    left: 7%;
+    margin: 15px;
   }
   .indexbackground h2 {
     margin-top: 50px;
