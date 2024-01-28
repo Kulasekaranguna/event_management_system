@@ -1,0 +1,82 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+
+.content{
+  display: flex;
+}
+.dashboard{
+  width: 25%;
+  height: 95vh;
+  background: var(--main);
+  border-radius: 20px;
+  position: fixed;
+  
+}
+
+.maincontent{
+  width: 70%;
+  padding: 10px;
+  min-height: 100vh;
+  position: absolute;
+  right: 1px;
+  overflow: scroll;
+  
+}
+.maincontent h1{
+  color:black;
+  font-size: 25px;
+  margin: 20px;
+  font-weight: bolder;
+}
+
+.dashboard a{
+  line-height: 70px;
+  margin: 70px;
+  font-size: 20px;
+  
+
+}
+.dashboard,.mobiledashbar h2{
+  font-size: 45px;
+  font-family: "Fira Sans", sans-serif;
+  text-align: center;
+  color: white;
+  margin: 30px;
+}
+.mobiledashbar{
+    display: none;
+}
+
+@media (max-width: 600px){
+.content{
+  flex-direction: column;
+  margin: 0;
+}
+.dashboard{
+  display: none;
+}
+.mobiledashbar{
+  width: 100%;
+  height: auto;
+  padding: 20px;
+  background: var(--main);
+  display: flex;
+  flex-direction: column;
+  border-radius: 0 0 20px 20px;
+}
+.mobiledashbar a{
+  width: 200px;
+  line-height: 50px;
+}
+
+
+
+.maincontent{
+  width: 90%;
+  overflow: scroll;
+  position: unset;
+}
+
+}
