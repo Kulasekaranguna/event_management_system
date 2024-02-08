@@ -1,3 +1,18 @@
+<?php
+session_start();
+require_once "db_connect.php";
+
+if (isset($_SESSION['user_details'])) {
+    $userData = $_SESSION['user_details'];
+}
+
+// Fetch categories from the database
+$categoryQuery = "SELECT * FROM categories";
+$categoryResult = $mysqli->query($categoryQuery);
+
+// Check if the form is submitted
+
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -11,6 +26,15 @@
   
   <link rel="stylesheet" href="asset/css/style.css" />
   <link rel="stylesheet" href="asset/css/main.css" />
+
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+   
+
+
+
+
   <style>
        body {
             font-family: Arial, sans-serif;
@@ -65,13 +89,13 @@
     <div class="content">
       <div class="dashboard">
       
+      <h2>Customer</h2>
         <ul>
-            <h2>Customer</h2>
-          <li><a href="customerhomepage.php" >Your Details</a></li>
-          <li><a href=""class="active">Book Event</a></li>
+          <li><a href="customerhomepage.php" class="active">Your Details</a></li>
+          <li><a href="bookevent.php">Book Event</a></li>
           <li><a href="booking_status.php">Booking Status</a></li>
-          <li><a href="">Search Category</a></li>
-          <li><a href="">Feedback</a></li>
+         
+          <li><a href="feedback.html">Feedback</a></li>
 
           <li><a href="index.html">LogOut</a></li>
         </ul>
@@ -82,26 +106,19 @@
       
         
     
-        <form action="submit_booking.php" method="post" class="eventbooking">
-        <?php
-session_start();
-
-if (isset($_SESSION['user_details'])) {
-    $userData = $_SESSION['user_details'];
-    echo "<input type=\"hidden\" id=\"bookername\" name=\"bookername\" value=\"" . $userData['username'] . "\">";
-}
-?>
-
-          
-            <label for="category">Event Type:</label>
-            <select id="category" name="category" onchange="calculateCost()">
-                <option value="0">Select</option>
-                <option value="20000">Marriage</option>
-                <option value="12000">Reception</option>
-                <option value="10000">BirthDay Party</option>
-                <option value="15000">Sports Event</option>
-                <option value="21000">Cultural Festival</option>
-            </select>
+        <form id="bookingForm" method="post" class="eventbooking">
+                <label for="category">Event Type:</label>
+                <select id="category" name="category">
+                    <option value="0">Select</option>
+                    <?php
+                    // Display fetched categories as options
+                    if ($categoryResult->num_rows > 0) {
+                        while ($row = $categoryResult->fetch_assoc()) {
+                            echo "<option value='{$row['category_name']}'>{$row['category_name']}</option>";
+                        }
+                    }
+                    ?>
+                </select>
             
             <label for="place">Event Place:</label>
             <input type="text" id="place" name="place">
@@ -157,7 +174,9 @@ if (isset($_SESSION['user_details'])) {
             
             <h3>Total Cost: ₹<span id="totalCost" name="totalCost">0</span></h3>
             <button type="button" onclick="generateReceipt()">Download Receipt</button>
-            <button>Book Event</button>
+            <input type="hidden" id="bookername" name="bookername" value="<?php echo $userData['username']; ?>">
+            <input type="hidden" id="razorpay_payment_id" name="razorpay_payment_id" value="">
+            <button type="button" id="payNowBtn">Pay Now</button>
         </form>
     
         <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
@@ -166,7 +185,7 @@ if (isset($_SESSION['user_details'])) {
             function calculateCost() {
                 var totalCost = 0;
                 var selectedOptions = document.querySelectorAll('input[type="checkbox"]:checked');
-                var category = document.getElementById('category').value;
+                
                 var foodType = document.getElementById('foodtype').value;
                 var light = document.getElementById('light').value;
                 var flowers = document.getElementById('flowers').value;
@@ -175,7 +194,7 @@ if (isset($_SESSION['user_details'])) {
                 selectedOptions.forEach(function(option) {
                     totalCost += parseInt(option.value);
                 });
-                totalCost += parseInt(category);
+             
                 totalCost += parseInt(foodType);
                 totalCost += parseInt(light);
                 totalCost += parseInt(flowers);
@@ -208,6 +227,51 @@ if (isset($_SESSION['user_details'])) {
                 var blob = new Blob([receiptContent], { type: "text/plain;charset=utf-8" });
                 saveAs(blob, "event_receipt.txt");
             }
+
+
+
+
+            $(document).ready(function () {
+        $('#payNowBtn').click(function () {
+            var form = $('#bookingForm');
+            $.ajax({
+                type: 'POST',
+                url: 'submit_booking.php',
+                data: form.serialize(),
+                success: function (response) {
+                    if (response.includes("Error")) {
+                        alert(response);
+                    } else {
+                        var totalAmount = parseInt($('#totalCost').text());
+                        var options = {
+                            key: 'rzp_test_76kxDJ6sC5HQqM',
+                            amount: totalAmount * 100, // Convert to paisa/cents
+                            currency: 'INR',
+                            name: 'kulasekaran s Event Management',
+                            description: 'Event Booking Payment',
+                            image: 'https://www.google.com/imgres?imgurl=https%3A%2F%2Fcdn.sanity.io%2Fimages%2Fkts928pd%2Fproduction%2F8e5bca865732d013fd24b9e71bb0a5f9e06d279b-731x731.png&tbnid=dBaGo3hdBW6OhM&vet=12ahUKEwjp67Lah5yEAxXElmMGHSe9B9sQMygFegUIARCAAQ..i&imgrefurl=https%3A%2F%2Flogo.com%2Flogos%2Fevent-management&docid=UUpRk1MCK8J5GM&w=731&h=731&q=event%20management%20logo&client=opera&ved=2ahUKEwjp67Lah5yEAxXElmMGHSe9B9sQMygFegUIARCAAQ',
+                            handler: function (response) {
+                                $('#razorpay_payment_id').val(response.razorpay_payment_id);
+                                form.submit();
+                            },
+                            prefill: {
+                                name: '<?php echo $userData['username']; ?>',
+                                email: '<?php echo $userData['email']; ?>'
+                            },
+                            theme: {
+                                color: '#007bff'
+                            }
+                        };
+                        var razorpay = new Razorpay(options);
+                        razorpay.open();
+                    }
+                },
+                error: function () {
+                    alert('Error occurred while processing payment.');
+                }
+            });
+        });
+    });
         </script>
       </div>
     </div>

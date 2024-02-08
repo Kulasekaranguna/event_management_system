@@ -22,8 +22,8 @@
           <li><a href="" class="active">Your Details</a></li>
           <li><a href="bookevent.php">Book Event</a></li>
           <li><a href="booking_status.php">Booking Status</a></li>
-          <li><a href="">Search Category</a></li>
-          <li><a href="">Feedback</a></li>
+         
+          <li><a href="feedback.html">Feedback</a></li>
 
           <li><a href="index.html">LogOut</a></li>
         </ul>

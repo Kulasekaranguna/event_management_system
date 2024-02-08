@@ -26,14 +26,14 @@ tbody th {
         <div class="dashboard">
             <h2>Admin</h2>
             <ul>
-                <li><a href="adminhomepage.php">Registered Users</a></li>
-                <li><a href="newbookings.php">New Bookings</a></li>
-                <li><a href="viewbooking.php" class="active">View Bookings</a></li>
-                <li><a href="#">Add Category</a></li>
-                <li><a href="#">View Category</a></li>
-                <li><a href="#">View Feedback</a></li>
-                <li><a href="index.html">Logout</a></li>
-            </ul>
+          <li><a href="adminhomepage.php">Registered Users</a></li>
+          <li><a href="newbookings.php"  class="active">New Bookings</a></li>
+          <li><a href="viewbooking.php">View Bookings</a></li>
+          <li><a href="add_catogery.php">Add Category</a></li>
+          <li><a href="view_catogery.php">View Category</a></li>
+          <li><a href="feedback_view.php">Veiw Feedback</a></li>
+          <li><a href="index.html">LogOut</a></li>
+        </ul>
         </div>
         <div class="maincontent">
             <h1>Admin Dashboard</h1>

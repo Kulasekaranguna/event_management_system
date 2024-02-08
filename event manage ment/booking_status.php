@@ -33,13 +33,13 @@ $bookingResult = $mysqli->query($bookingQuery);
 <div class="content">
       <div class="dashboard">
       
+      <h2>Customer</h2>
         <ul>
-            <h2>Customer</h2>
-          <li><a href="customerhomepage.php" >Your Details</a></li>
+          <li><a href="customerhomepage.php" class="active">Your Details</a></li>
           <li><a href="bookevent.php">Book Event</a></li>
-          <li><a href="booking_status.php" class="active">Booking Status</a></li>
-          <li><a href="">Search Category</a></li>
-          <li><a href="">Feedback</a></li>
+          <li><a href="booking_status.php">Booking Status</a></li>
+         
+          <li><a href="feedback.html">Feedback</a></li>
 
           <li><a href="index.html">LogOut</a></li>
         </ul>
