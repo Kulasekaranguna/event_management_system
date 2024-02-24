@@ -106,7 +106,7 @@ $categoryResult = $mysqli->query($categoryQuery);
       
         
     
-        <form id="bookingForm" method="post" class="eventbooking">
+        <form id="bookingForm" method="post"  class="eventbooking">
                 <label for="category">Event Type:</label>
                 <select id="category" name="category">
                     <option value="0">Select</option>
@@ -173,9 +173,10 @@ $categoryResult = $mysqli->query($categoryQuery);
             </select>
             
             <h3>Total Cost: ₹<span id="totalCost" name="totalCost">0</span></h3>
-            <button type="button" onclick="generateReceipt()">Download Receipt</button>
+        
             <input type="hidden" id="bookername" name="bookername" value="<?php echo $userData['username']; ?>">
             <input type="hidden" id="razorpay_payment_id" name="razorpay_payment_id" value="">
+
             <button type="button" id="payNowBtn">Pay Now</button>
         </form>
     
@@ -202,78 +203,68 @@ $categoryResult = $mysqli->query($categoryQuery);
     
                 document.getElementById('totalCost').textContent = totalCost;
             }
-            function generateReceipt() {
-                var bookername = document.getElementById('bookername').value;
-                var category = document.getElementById('category').options[document.getElementById('category').selectedIndex].text;
-                var place = document.getElementById('place').value;
-                var guests = document.getElementById('guests').value;
-                var date = document.getElementById('date').value;
-                var totalCost = document.getElementById('totalCost').textContent;
-    
-                var receiptContent = "Event Booking Receipt\n\n";
-                receiptContent += "Booker Name: " + bookername + "\n";
-                receiptContent += "Event Type: " + category + "\n";
-                receiptContent += "Event Place: " + place + "\n";
-                receiptContent += "Number of Guests: " + guests + "\n";
-                receiptContent += "Date: " + date + "\n";
-                
-                var selectedOptions = document.querySelectorAll('input[type="checkbox"]:checked');
-                selectedOptions.forEach(function(option) {
-                    receiptContent += option.parentElement.textContent + ": rs:" + option.value + "\n";
-                });
-    
-                receiptContent += "Total Cost: RS: " + totalCost;
-    
-                var blob = new Blob([receiptContent], { type: "text/plain;charset=utf-8" });
-                saveAs(blob, "event_receipt.txt");
-            }
-
-
-
-
+           
             $(document).ready(function () {
-        $('#payNowBtn').click(function () {
-            var form = $('#bookingForm');
-            $.ajax({
-                type: 'POST',
-                url: 'submit_booking.php',
-                data: form.serialize(),
-                success: function (response) {
-                    if (response.includes("Error")) {
-                        alert(response);
-                    } else {
-                        var totalAmount = parseInt($('#totalCost').text());
-                        var options = {
-                            key: 'rzp_test_76kxDJ6sC5HQqM',
-                            amount: totalAmount * 100, // Convert to paisa/cents
-                            currency: 'INR',
-                            name: 'kulasekaran s Event Management',
-                            description: 'Event Booking Payment',
-                            image: 'https://www.google.com/imgres?imgurl=https%3A%2F%2Fcdn.sanity.io%2Fimages%2Fkts928pd%2Fproduction%2F8e5bca865732d013fd24b9e71bb0a5f9e06d279b-731x731.png&tbnid=dBaGo3hdBW6OhM&vet=12ahUKEwjp67Lah5yEAxXElmMGHSe9B9sQMygFegUIARCAAQ..i&imgrefurl=https%3A%2F%2Flogo.com%2Flogos%2Fevent-management&docid=UUpRk1MCK8J5GM&w=731&h=731&q=event%20management%20logo&client=opera&ved=2ahUKEwjp67Lah5yEAxXElmMGHSe9B9sQMygFegUIARCAAQ',
-                            handler: function (response) {
-                                $('#razorpay_payment_id').val(response.razorpay_payment_id);
-                                form.submit();
-                            },
-                            prefill: {
-                                name: '<?php echo $userData['username']; ?>',
-                                email: '<?php echo $userData['email']; ?>'
-                            },
-                            theme: {
-                                color: '#007bff'
-                            }
-                        };
-                        var razorpay = new Razorpay(options);
-                        razorpay.open();
+    $('#payNowBtn').click(function () {
+        var form = $('#bookingForm');
+        // Get the payment ID from Razorpay's response
+        var razorpay_payment_id = null; // Initialize the variable
+
+        var totalAmount = parseInt($('#totalCost').text()) * 100; // Convert to paisa/cents
+        var options = {
+            key: 'rzp_test_76kxDJ6sC5HQqM',
+            amount: totalAmount,
+            currency: 'INR',
+            name: 'kulasekaran s Event Management',
+            description: 'Event Booking Payment',
+            image: 'https://www.google.com/imgres?imgurl=https%3A%2F%2Fcdn.sanity.io%2Fimages%2Fkts928pd%2Fproduction%2F8e5bca865732d013fd24b9e71bb0a5f9e06d279b-731x731.png&tbnid=dBaGo3hdBW6OhM&vet=12ahUKEwjp67Lah5yEAxXElmMGHSe9B9sQMygFegUIARCAAQ..i&imgrefurl=https%3A%2F%2Flogo.com%2Flogos%2Fevent-management&docid=UUpRk1MCK8J5GM&w=731&h=731&q=event%20management%20logo&client=opera&ved=2ahUKEwjp67Lah5yEAxXElmMGHSe9B9sQMygFegUIARCAAQ',
+            prefill: {
+                name: '<?php echo $userData['username']; ?>',
+                email: '<?php echo $userData['email']; ?>'
+            },
+            theme: {
+                color: '#007bff'
+            },
+            handler: function (response) {
+                // Store the payment ID
+                razorpay_payment_id = response.razorpay_payment_id;
+
+                // Add the payment ID to the form data
+                form.append($('<input>').attr({
+                    type: 'hidden',
+                    id: 'razorpay_payment_id',
+                    name: 'razorpay_payment_id',
+                    value: razorpay_payment_id
+                }));
+
+                // Now submit the form via AJAX
+                $.ajax({
+                    type: 'POST',
+                    url: 'submit_booking.php',
+                    data: form.serialize(),
+                    success: function (response) {
+                        // Handle success response
+                        console.log(response); // Log the response
+                        // Add your code to handle the response as needed
+                    },
+                    error: function () {
+                        // Handle error
+                        alert('Error occurred while processing payment.');
                     }
-                },
-                error: function () {
-                    alert('Error occurred while processing payment.');
-                }
-            });
-        });
+                });
+            }
+        };
+        var razorpay = new Razorpay(options);
+        razorpay.open();
     });
+});
+
+
+
         </script>
       </div>
     </div>
   </body>
 </html>
+
+

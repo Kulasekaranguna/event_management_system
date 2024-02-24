@@ -1,6 +1,12 @@
 <?php
 require_once "db_connect.php";
+$userData = null;
+session_start();
+if (isset($_SESSION['user_details'])) {
+    $userData = $_SESSION['user_details'];
+}
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    error_log("Received POST data: " . print_r($_POST, true));
     // Retrieve form data
     $bookername = $_POST["bookername"];
     $place = $_POST["place"];
@@ -8,6 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $date = $_POST["date"];
     $razorpay_payment_id = $_POST["razorpay_payment_id"];
     $category = isset($_POST["category"]) ? $_POST["category"] : ""; // Corrected line
+    error_log("Received Razorpay Payment ID: " . $razorpay_payment_id);
 
     // Checkbox items
     $dj = isset($_POST["dj"]) ? "Yes" : "No";
@@ -74,7 +81,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             foodtype VARCHAR(50) NOT NULL,
             total_cost DECIMAL(10, 2) NOT NULL,
             razorpay_payment_id VARCHAR(255) NOT NULL,
-            status VARCHAR(20) DEFAULT 'Pending'
+            `order` VARCHAR(20) DEFAULT 'Pending',
+            status VARCHAR(30) DEFAULT 'Event Initiation Near'
         )";
     if ($mysqli->query($createTableQuery) !== TRUE) {
         echo "Error creating table: " . $mysqli->error;
@@ -88,6 +96,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Error inserting data: " . $mysqli->error;
     } else {
         echo "<p>Booking successfully submitted!</p>";
+    }
+    
+    // Assuming you have the user's email in $userData['email']
+    if ($userData !== null && isset($userData['email'])) {
+        $to = $userData['email'];
+        $subject = "Booking Confirmation";
+        $message = "Dear " . $userData['username'] . ",\n\n";
+        $message .= "Your booking has been successfully confirmed!\n\n";
+        $message .= "Event Type: " . $category . "\n";
+        $message .= "Event Place: " . $place . "\n";
+        $message .= "Number of Guests: " . $guests . "\n";
+        $message .= "Date: " . $date . "\n";
+        // Include other relevant booking details
+        $message .= "Total Cost: RS: " . $totalCost . "\n\n";
+        $message .= "Thank you for choosing our services. We look forward to hosting your event!\n\n";
+        $message .= "Regards,\n";
+        $message .= "Your Event Management Team";
+
+        $headers = "From: itskulasekaran@gmail.com"; // Change this to your email address
+
+        // Send email
+        if (mail($to, $subject, $message, $headers)) {
+            echo "<p>Booking successfully submitted! Confirmation email sent to your registered email.</p>";
+        } else {
+            echo "Error sending email.";
+        }
+    } else {
+        echo "User email not found. Unable to send confirmation email.";
     }
 }
 

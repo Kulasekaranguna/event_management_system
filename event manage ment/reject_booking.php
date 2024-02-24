@@ -6,7 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id'])) {
     $bookingId = $_GET['id'];
     
     // Update the status of the booking to "Rejected"
-    $updateQuery = "UPDATE bookings SET status = 'Rejected' WHERE id = $bookingId";
+    $updateQuery = "UPDATE bookings SET `order` = 'Rejected' WHERE id = $bookingId";
 
     if ($mysqli->query($updateQuery) !== TRUE) {
         echo "Error updating booking status: " . $mysqli->error;

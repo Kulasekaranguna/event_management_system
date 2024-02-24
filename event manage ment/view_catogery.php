@@ -69,7 +69,7 @@
     </div>
     <div class="maincontent">
         <div class="container">
-            <h2>All Feedback</h2>
+            <h2>All Category</h2>
             <?php
             // Include database connection
             include 'db_connect.php';
@@ -98,7 +98,7 @@
 
 <script>
     function deleteFeedback(id) {
-        if (confirm("Are you sure you want to delete this feedback?")) {
+        if (confirm("Are you sure you want to delete this Category?")) {
             // Redirect to a PHP script to handle the deletion, passing the feedback ID
             window.location.href = "delete_category.php?id=" + id;
         }

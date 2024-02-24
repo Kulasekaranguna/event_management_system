@@ -5,13 +5,13 @@ require_once "db_connect.php";
 if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id'])) {
     $bookingId = $_GET['id'];
     
-    // Update the status of the booking to "Accepted"
-    $updateQuery = "UPDATE bookings SET `order` = 'Accepted' WHERE id = $bookingId";
+    // Update the status of the booking to "Rejected"
+    $updateQuery = "UPDATE bookings SET status = 'The event has concluded.' WHERE id = $bookingId";
 
     if ($mysqli->query($updateQuery) !== TRUE) {
         echo "Error updating booking status: " . $mysqli->error;
     } else {
-        echo "Booking accepted successfully!";
+        echo "status update successfully !";
     }
 } else {
     echo "Invalid request.";

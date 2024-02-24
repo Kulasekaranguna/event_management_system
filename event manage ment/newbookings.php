@@ -3,7 +3,7 @@
 require_once "db_connect.php";
 
 // Fetch all bookings from the database
-$bookingQuery = "SELECT * FROM bookings WHERE status = 'Pending'";
+$bookingQuery = "SELECT * FROM bookings WHERE `order` = 'Pending'";
 $bookingResult = $mysqli->query($bookingQuery);
 
 ?>
@@ -16,6 +16,26 @@ $bookingResult = $mysqli->query($bookingQuery);
     <title>new Bookings</title>
    
     <link rel="stylesheet" href="asset/css/main.css" />
+    <style>
+        /* Style for buttons */
+      .start-button, .close-button {
+        padding: 8px 16px;
+        background-color: #4CAF50; /* Green */
+        border: none;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 14px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+
+      .close-button {
+        background-color: #f44336; /* Red */
+      }
+    </style>
   
    
 </head>
@@ -40,7 +60,8 @@ $bookingResult = $mysqli->query($bookingQuery);
     <?php
     if ($bookingResult->num_rows > 0) {
         echo "<table>";
-        echo "<tr><th>Booking ID</th><th>Booker Name</th><th>Event Type</th><th>Event Place</th><th>No. of Guests</th><th>Date</th><th>Dj Service</th><th>Stage setup</th><th>Sound System</th><th>Foodtype</th><th>Breakfast</th><th>Lunch</th><th>Tea&Snaks</th><th>Dinner</th><th>Veg</th><th>Non Veg</th><th>Lightings</th><th>Flowers</th><th>Seating</th><th>Total Cost</th><th>Status</th><th>Action</th></tr>";
+        echo "<tr><th>Booking ID</th><th>Booker Name</th><th>Event Type</th><th>Event Place</th><th>No. of Guests</th><th>Date</th><th>Dj Service</th><th>Stage setup</th><th>Sound System</th><th>Foodtype</th><th>Breakfast</th><th>Lunch</th><th>Tea&Snaks</th>
+        <th>Dinner</th><th>Veg</th><th>Non Veg</th><th>Lightings</th><th>Flowers</th><th>Seating</th><th>Total Cost</th><th>Payment id</th><th>Action</th></tr>";
         while ($row = $bookingResult->fetch_assoc()) {
             echo "<tr>";
             echo "<td>" . $row["id"] . "</td>";
@@ -63,14 +84,14 @@ $bookingResult = $mysqli->query($bookingQuery);
             echo "<td>" . $row["flowers"] . "</td>";
             echo "<td>" . $row["seat"] . "</td>";
             echo "<td>" . $row["total_cost"] . "</td>";
-            echo "<td>" . $row["status"] . "</td>";
+            echo "<td>" . ($row["razorpay_payment_id"] != "" ? $row["razorpay_payment_id"] : "Payment Failed") . "</td>";
            
            
             
             echo "<td>";
-            if ($row["status"] == "Pending") {
-                echo "<a href='accept_booking.php?id=" . $row["id"] . "'>Accept</a> | ";
-                echo "<a href='reject_booking.php?id=" . $row["id"] . "'>Reject</a>";
+            if ($row["order"] == "Pending") {
+                echo "<a class='start-button' href='accept_booking.php?id=" . $row["id"] . "'>Accept</a>  ";
+                echo "<a class='close-button' href='reject_booking.php?id=" . $row["id"] . "'>Reject</a>";
             }
             echo "</td>";
             echo "</tr>";
