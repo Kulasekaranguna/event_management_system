@@ -54,7 +54,7 @@
       
       <h2>Admin</h2>
         <ul>
-          <li><a href="adminhomepage.php">Registered Users</a></li>
+          <li><a href="adminhomepage.php">Dashboard</a></li>
           <li><a href="newbookings.php"  class="active">New Bookings</a></li>
           <li><a href="viewbooking.php">View Bookings</a></li>
           <li><a href="add_catogery.php">Add Category</a></li>

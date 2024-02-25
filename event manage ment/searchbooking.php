@@ -7,7 +7,6 @@
    
     <link rel="stylesheet" href="asset/css/main.css" />
     <style>
-        <style>
         /* General Styles */
         body {
             font-family: Arial, sans-serif;
@@ -21,8 +20,6 @@
             margin: 0 auto;
             padding: 20px;
         }
-
-       
 
         .maincontent {
             float: right;
@@ -66,6 +63,13 @@
             margin-right: 10px;
         }
 
+        select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+
         button[type="submit"] {
             padding: 8px 20px;
             background-color: #007bff;
@@ -79,25 +83,54 @@
             background-color: #0056b3;
         }
     </style>
-    </style>
 </head>
 <body>
     <div class="content">
-       
         <div class="maincontent">
             <h1>Admin Dashboard</h1>
             <form action="" method="GET">
                 <input type="text" name="search" placeholder="Search by booker's name">
+                <select name="category">
+                    <option value="">All Categories</option>
+                    <?php
+                    // Include database connection
+                    require_once "db_connect.php";
+
+                    // Fetch categories from the database
+                    $categoriesQuery = "SELECT * FROM categories";
+                    $categoriesResult = $mysqli->query($categoriesQuery);
+
+                    // Display categories as options in the select dropdown
+                    while ($row = $categoriesResult->fetch_assoc()) {
+                        echo "<option value=\"" . $row["category_name"] . "\">" . $row["category_name"] . "</option>";
+                    }
+
+                    
+                    ?>
+                </select>
                 <button type="submit">Search</button>
             </form>
             <?php
+            // Include database connection
             require_once "db_connect.php";
 
+            // Initialize search variables
             $search = $_GET['search'] ?? '';
+            $category = $_GET['category'] ?? '';
 
-            $bookingQuery = "SELECT * FROM bookings WHERE bookername LIKE '%$search%' ORDER BY id DESC";
+            // Construct the query based on search criteria
+            $bookingQuery = "SELECT * FROM bookings WHERE bookername LIKE '%$search%'";
+
+            if (!empty($category)) {
+                $bookingQuery .= " AND category = '$category'";
+            }
+
+            $bookingQuery .= " ORDER BY id DESC";
+
+            // Execute the query
             $bookingResult = $mysqli->query($bookingQuery);
 
+            // Display search results
             if ($bookingResult->num_rows > 0) {
                 echo "<table>";
                 echo "<thead><tr><th>Booking ID</th><th>Booker Name</th><th>Event Type</th><th>Event Place</th><th>No. of Guests</th><th>Date</th><th>Dj Service</th><th>Stage setup</th><th>Sound System</th><th>Food Type<th>Breakfast</th><th>Lunch</th><th>Tea & Snacks</th><th>Dinner</th><th>Veg</th><th>Non Veg</th><th>Lightings</th><th>Flowers</th><th>Seating</th><th>Total Cost</th><th>Status</th></tr></thead>";
@@ -132,6 +165,9 @@
             } else {
                 echo "No bookings found.";
             }
+
+            // Close the database connection
+            $mysqli->close();
             ?>
         </div>
     </div>

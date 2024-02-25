@@ -10,17 +10,20 @@ $bookingResult = $mysqli->query($bookingQuery);
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>new Bookings</title>
-   
+
     <link rel="stylesheet" href="asset/css/main.css" />
     <style>
-        /* Style for buttons */
-      .start-button, .close-button {
+    /* Style for buttons */
+    .start-button,
+    .close-button {
         padding: 8px 16px;
-        background-color: #4CAF50; /* Green */
+        background-color: #4CAF50;
+        /* Green */
         border: none;
         color: white;
         text-align: center;
@@ -30,34 +33,39 @@ $bookingResult = $mysqli->query($bookingQuery);
         margin: 4px 2px;
         cursor: pointer;
         border-radius: 4px;
-      }
+    }
 
-      .close-button {
-        background-color: #f44336; /* Red */
-      }
+    .close-button {
+        background-color: #f44336;
+        /* Red */
+    }
+    h1 {
+        margin: 25px;
+    }
     </style>
-  
-   
+
+
 </head>
+
 <body>
-<div class="content">
-      <div class="dashboard">
-      
-      <h2>Admin</h2>
-      <ul>
-          <li><a href="adminhomepage.php">Registered Users</a></li>
-          <li><a href="newbookings.php"  class="active">New Bookings</a></li>
-          <li><a href="viewbooking.php">View Bookings</a></li>
-          <li><a href="add_catogery.php">Add Category</a></li>
-          <li><a href="view_catogery.php">View Category</a></li>
-          <li><a href="feedback_view.php">Veiw Feedback</a></li>
-          <li><a href="index.html">LogOut</a></li>
-        </ul>
-      </div>
-      
-      <div class="maincontent">
-    <h1>Admin Dashboard</h1>
-    <?php
+    <div class="content">
+        <div class="dashboard">
+
+            <h2>Admin</h2>
+            <ul>
+                <li><a href="adminhomepage.php">Dashboard</a></li>
+                <li><a href="newbookings.php" class="active">New Bookings</a></li>
+                <li><a href="viewbooking.php">View Bookings</a></li>
+                <li><a href="add_catogery.php">Add Category</a></li>
+                <li><a href="view_catogery.php">View Category</a></li>
+                <li><a href="feedback_view.php">Veiw Feedback</a></li>
+                <li><a href="index.html">LogOut</a></li>
+            </ul>
+        </div>
+
+        <div class="maincontent">
+            <h1>Admin Dashboard</h1>
+            <?php
     if ($bookingResult->num_rows > 0) {
         echo "<table>";
         echo "<tr><th>Booking ID</th><th>Booker Name</th><th>Event Type</th><th>Event Place</th><th>No. of Guests</th><th>Date</th><th>Dj Service</th><th>Stage setup</th><th>Sound System</th><th>Foodtype</th><th>Breakfast</th><th>Lunch</th><th>Tea&Snaks</th>
@@ -101,7 +109,8 @@ $bookingResult = $mysqli->query($bookingQuery);
         echo "No bookings found.";
     }
     ?>
+        </div>
     </div>
-</div>
 </body>
+
 </html>

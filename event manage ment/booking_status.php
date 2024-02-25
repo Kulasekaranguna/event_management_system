@@ -1,29 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Booking Status</title>
     <!-- Add your CSS stylesheets here -->
     <link rel="stylesheet" href="asset/css/main.css">
+    <style>
+          .user-profile {
+    margin-bottom: 20px;
+    display:flex;
+    align-items: center;
+    }
+    
+
+.dprofile-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+    /* Add additional styles as needed */
+}
+
+.username {
+    font-weight: bold;
+    font-size: 18px;
+    text-align: ;
+    /* Add additional styles as needed */
+}
+h1{
+    margin:25px;
+}
+
+    </style>
 </head>
+
 <body>
-<div class="content">
-    <div class="dashboard">
-        <h2>Customer</h2>
-        <ul>
-            <li><a href="customerhomepage.php" class="active">Your Details</a></li>
-            <li><a href="bookevent.php">Book Event</a></li>
-            <li><a href="booking_status.php">Booking Status</a></li>
-            <li><a href="feedback.html">Feedback</a></li>
-            <li><a href="index.html">LogOut</a></li>
-        </ul>
-    </div>
-    <div class="maincontent">
-        <h1>Booking Status</h1>
+    <div class="content">
+        <div class="dashboard">
+            <h2>Customer</h2>
+            <ul>
+                <li><a href="customerhomepage.php" class="active">Your Details</a></li>
+                <li><a href="bookevent.php">Book Event</a></li>
+                <li><a href="booking_status.php">Booking Status</a></li>
+                <li><a href="feedback.html">Feedback</a></li>
+                <li><a href="index.html">LogOut</a></li>
+            </ul>
+        </div>
+        <div class="maincontent">
+        <div class="user-profile">
         <?php
+            session_start(); // Start the session
+
+require_once "db_connect.php";
+        // Check if user details are available
+        if (isset($_SESSION['user_details'])) {
+            $userData = $_SESSION['user_details'];
+
+            // Display profile picture if available
+            if (!empty($userData['profile_picture'])) {
+                echo "<img src='" . htmlspecialchars($userData['profile_picture']) . "' alt='Profile Picture' class='dprofile-pic'>";
+            }
+
+            // Display registered username
+            echo "<p class='username'>" . htmlspecialchars($userData['username']) . "</p>";
+        }
+        ?>
+    </div>
+            <h1>Booking Status</h1>
+            <?php
         require_once "db_connect.php";
-        session_start(); // Start the session
+    
 
         // Check if user is logged in
         if (!isset($_SESSION['user_details'])) {
@@ -59,7 +107,8 @@
             echo "No bookings found for this user.";
         }
         ?>
+        </div>
     </div>
-</div>
 </body>
+
 </html>

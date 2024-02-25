@@ -121,7 +121,7 @@ login & Registration form
 }
 .registrationbox {
   height: auto;
-  width: 300px;
+  width: 400px;
   background: #ffffffd5;
   border-radius: 20px;
   padding: 20px;
@@ -157,6 +157,8 @@ login & Registration form
   color: #fff;
   font-family: "Inter", sans-serif;
   font-family: "Quicksand", sans-serif;
+
+ 
 }
 
 
@@ -169,6 +171,7 @@ resposive
 @media (max-width: 600px) {
   .indexbackground li {
     left: 12%;
+    
   }
   .indexbackground h2 {
     margin-top: 50px;
