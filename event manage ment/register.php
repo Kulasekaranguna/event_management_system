@@ -28,7 +28,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         password VARCHAR(255) NOT NULL,
         mobile VARCHAR(12) NOT NULL,
         email VARCHAR(70) NOT NULL,
-        address VARCHAR(255) NOT NULL
+        address VARCHAR(255) NOT NULL,
+      profile_picture VARCHAR(255) DEFAULT NULL
     )";
 
     if ($mysqli->query($createTableQuery) !== TRUE) {
