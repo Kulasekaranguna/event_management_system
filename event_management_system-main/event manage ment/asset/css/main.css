@@ -1,0 +1,112 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.content {
+  display: flex;
+  flex-wrap: wrap;
+}
+.dashboard {
+  width: 20%;
+  background: url(../img/bg3.jpg) no-repeat center;
+  background-size: cover;
+  padding: 20px;
+  color: white;
+  position: fixed;
+  height: 100%;
+  z-index: 2;
+  border-radius: 10px;
+  margin-right: 20px; /* Add spacing between dashboard and main content */
+  overflow-y: auto; /* Add vertical scroll if needed */
+}
+.dashboard h2 {
+  margin: 30px 10px ;
+  font-family: 'Inter', sans-serif;
+  font-family: 'Quicksand', sans-serif;
+  text-align: center;
+  font-size: 45px;
+}
+.dashboard ul {
+  list-style-type: none;
+  padding: 0;
+}
+.dashboard ul li {
+  margin-bottom: 20px;
+  width: 160px;
+  text-align: center;
+  background-image: linear-gradient(to right, #434343 0%, black 100%);
+  padding: 10px;
+  border-radius: 20px;
+  border: 1px dashed white;
+}
+.dashboard ul li a {
+  color: white;
+  font-family: 'Inter', sans-serif;
+  font-weight: bolder;
+  text-decoration: none;
+}
+.dashboard ul li a:hover {
+  text-decoration: underline;
+}
+.maincontent {
+  width: 80%;
+  min-height: 100vh;
+  position: absolute;
+  right: 2px;
+  padding: 20px;
+  overflow-x: auto;
+  background-image: linear-gradient(to top, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%);
+}
+.table-responsive {
+  overflow-x: auto;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+th {
+  
+  background: linear-gradient(178.6deg, rgb(20, 36, 50) 11.8%, rgb(30, 32, 34) 83.8%);
+  color: white;
+}
+thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+tbody th {
+  position: sticky;
+  left: 0;
+  background-color: #f0f0f0;
+  z-index: 1;
+}
+
+/******************
+*******************
+resposive
+*******************
+*******************/
+@media (max-width: 600px){
+  .content {
+    display: block;
+  }
+.dashboard {
+  width: 100%;
+  position: unset;
+}
+.dashboard ul li {
+  margin: 10px auto;
+}
+.maincontent {
+  width: 100%;
+  min-height: 100vh;
+ 
+}
+}
